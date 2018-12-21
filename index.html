@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+	<title>PlagiarismSearch Sample reports API</title>
+</head>
+
+<style>
+	body {
+		padding: 90px;
+	}
+
+	.form-control {
+		/*font-size: 14px;*/
+		resize: none;
+	}
+
+	#language {
+		text-transform: lowercase;
+	}
+
+	#result {
+		background-color: whitesmoke;
+		font-size: 13px;
+	}
+
+	.btn:focus, .btn.focus {
+		outline: 0;
+		box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+	}
+
+	.btn-primary:focus, .btn-primary.focus {
+		box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.5);
+	}
+
+	.btn-info:focus, .btn-info.focus {
+		box-shadow: 0 0 0 0.1rem rgba(23, 162, 184, 0.5);
+	}
+
+	.btn-success:focus, .btn-success.focus {
+		box-shadow: 0 0 0 0.1rem rgba(40, 167, 69, 0.5);
+	}
+
+	.btn-warning:focus, .btn-warning.focus {
+		box-shadow: 0 0 0 0.1rem rgba(255, 193, 7, 0.5);
+	}
+
+	.btn-danger:focus, .btn-danger.focus {
+		box-shadow: 0 0 0 0.1rem rgba(220, 53, 69, 0.5);
+	}
+</style>
+
+<body>
+	<div class="row">
+		<h1>Plagiarism Search</h1>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-3">
+			<ol class="list-group">
+				<li class="list-group-item">
+					<button id="list" class="btn btn-sm btn-primary">Ver todos mis reportes</button>
+				</li>
+				<li class="list-group-item">
+					<h6 id="warning-create" style="display: none;"><span class="badge badge-secondary">Llena estos campos</span></h6>
+					<input type="text" id="title" class="form-group form-control form-control-sm" placeholder="Titulo">
+					<textarea id="text" class="form-group form-control form-control-sm" placeholder="Contenido"></textarea>
+					<input type="text" id="language" class="form-group form-control form-control-sm" placeholder="Idioma">
+					<button id="create" class="btn btn-sm btn-success">Crear reporte</button>
+				</li>
+				<li class="list-group-item">
+					<h6 id="warning-file" style="display: none;"><span class="badge badge-secondary">Llena estos campos</span></h6>
+					<input type="text" id="title-file" class="form-group form-control form-control-sm" placeholder="Titulo">
+					<div class="input-group">
+						<label class="input-group-prepend">
+							<span class="btn btn-sm btn-secondary">Selecc&hellip; <input type="file" id="file" style="display: none;"></span>
+						</label>
+						<input type="text" id="text-file" class="form-group form-control form-control-sm" readonly>
+					</div>
+					<button id="create-file" class="btn btn-sm btn-success">Crear reporte de un archivo local</button>
+				</li>
+				<li class="list-group-item">
+					<h6 id="warning-url" style="display: none;"><span class="badge badge-secondary">Llena estos campos</span></h6>
+					<h6 id="warning-url-real" style="display: none;"><span class="badge badge-secondary">Escribe un link de verdad</span></h6>
+					<input type="text" id="title-url" class="form-group form-control form-control-sm" placeholder="Titulo">
+					<input type="text" id="url" class="form-group form-control form-control-sm" placeholder="URL">
+					<button id="create-url" class="btn btn-sm btn-success">Crear reporte de un URL publico</button>
+				</li>
+				<li class="list-group-item">
+					<h6 id="warning-view" style="display: none;"><span class="badge badge-secondary">Selecciona un reporte</span></h6>
+					<select id="reportes" class="form-group form-control form-control-sm"></select>
+					<button id="view" class="btn btn-sm btn-info">Ver reporte seleccionado</button>
+				</li>
+				<li class="list-group-item">
+					<h6 id="warning-update"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
+					<input type="text" id="title-update" class="form-group form-control form-control-sm" placeholder="Titulo" disabled>
+					<textarea id="text-update" class="form-group form-control form-control-sm" placeholder="Contenido" disabled></textarea>
+					<input type="text" id="language-update" class="form-group form-control form-control-sm" placeholder="Idioma" disabled>
+					<button id="update" class="btn btn-sm btn-warning" disabled>Actualizar reporte</button>
+				</li>
+				<li class="list-group-item">
+					<h6 id="warning-delete"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
+					<button id="delete" class="btn btn-sm btn-danger" disabled>Borrar reporte</button>
+				</li>
+				<li class="list-group-item">
+					<h6 id="warning-status"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
+					<button id="status" class="btn btn-sm btn-info" disabled>Estado de reporte</button>
+				</li>
+			</ol>
+		</div>
+		<div class="col-9">
+			<pre id="result"></pre>
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+	<script type="text/javascript">
+		$(function() {
+
+			function getReportes(cmd) {
+				$.ajax({
+					url: 'list.php',
+					method: 'POST'
+				}).done(function(data) {
+					switch(cmd) {
+						case 1:
+							$('#reportes').empty().append('<option value="" selected disabled>Seleccionar reporte</option>');
+							$.each(data.data, function(i, reporte) {
+								var list = '';
+								list += '<option value="' + reporte.id + '">';
+								list += reporte.title;
+								list += '</option>';
+								$('#reportes').append($(list));
+							});
+							break;
+						case 2:
+							$('#result').text('').text(JSON.stringify(data, null, '\t'));
+							reset();
+							break;
+					}
+				}).fail(function(jqXHR) {
+					console.log(jqXHR);
+				});
+			}
+
+			function reset() {
+				$('#warning-update, #warning-delete, #warning-status').show();
+				$('#title-update, #text-update, #language-update').val('').prop('disabled', true);
+				$('#update, #delete, #status').data('id', null).prop('disabled', true);
+				getReportes(1);
+				$('#reportes').val(null);
+			}
+
+			getReportes(1);
+
+			$('#list').on('click', function() {
+				getReportes(2);
+			});
+
+			$('#create').on('click', function() {
+				if($('#title').val() == '' || $('#text').val() == '' || $('#language').val() == '') {
+					$('#warning-create').show().delay(4000).fadeOut();
+					return null;
+				}
+
+				$.ajax({
+					url: 'create.php',
+					method: 'POST',
+					data: {
+						title: $('#title').val(),
+						text: $('#text').val(),
+						language: $('#language').val().toLowerCase()
+					}
+				}).done(function(data) {
+					$('#result').text('').text(JSON.stringify(data, null, '\t'));
+					$('#title, #text, #language').val('');
+					getReportes(1);
+				}).fail(function(jqXHR) {
+					console.log(jqXHR);
+				});
+			});
+
+			$(':file').on('change', function() {
+				var $input = $(this);
+				var numFiles = $input.get(0).files ? $input.get(0).files.length : 1;
+				var label = $input.val().replace(/\\/g, '/').replace(/.*\//, '');
+				$input.trigger('fileselect', [numFiles, label]);
+			}).on('fileselect', function(event, numFiles, label) {
+				var $text = $(this).parents('.input-group').find(':text');
+				var log = numFiles > 1 ? numFiles + ' files selected' : label;
+				if($text.length) {
+					$text.val(log);
+				} else {
+					if(log) alert(log);
+				}
+			});
+
+			$('#create-file').on('click', function() {
+				if($('#title-file').val() == '' || $('#file').val() == '') {
+					$('#warning-file').show().delay(4000).fadeOut();
+					return null;
+				}
+
+				var data = new FormData();
+				$.each($('#file')[0].files, function(i, file) {
+					data.append('file-' + i, file);
+				});
+
+				data.append('title', $('#title-file').val());
+
+				$.ajax({
+					url: 'create-file.php',
+					method: 'POST',
+					data: data,
+					cache: false,
+					contentType: false,
+					processData: false
+				}).done(function(data) {
+					$('#result').text('').text(JSON.stringify(data, null, '\t'));
+
+					$('#title-file, #file, #text-file').val('');
+					getReportes(1);
+				}).fail(function(jqXHR) {
+					console.log(jqXHR);
+				});
+			});
+
+			$('#create-url').on('click', function() {
+
+				$title = $('#title-url').val();
+				$url = $('#url').val();
+
+				if($title == '' || $url == '') {
+					$('#warning-url').show().delay(4000).fadeOut();
+					return null;
+				}
+
+				$.ajax({
+					type: 'HEAD',
+					url: $url
+				}).done(function() {
+					$.ajax({
+						url: 'create-url.php',
+						method: 'POST',
+						data: {
+							title: $title,
+							url: $url
+						}
+					}).done(function(data) {
+						$('#result').text('').text(JSON.stringify(data, null, '\t'));
+
+						$($title - url, $url).val('');
+						getReportes(1);
+					}).fail(function(jqXHR) {
+						console.log(jqXHR);
+					});
+				}).fail(function() {
+					alert('no');
+				});
+			});
+
+			$('#view').on('click', function() {
+				if($('#reportes').val() == null || $('#reportes').val() == '') {
+					$('#warning-view').show().delay(4000).fadeOut();
+					return null;
+				}
+				$.ajax({
+					url: 'view.php',
+					method: 'POST',
+					data: {
+						id: parseInt($('#reportes').val())
+					}
+				}).done(function(data) {
+					$('#result').text('').text(JSON.stringify(data, null, '\t'));
+
+					$('#warning-update, #warning-delete, #warning-status').hide();
+
+					$('#title-update').val(data.data.title);
+					$('#text-update').val(data.data.text);
+					$('#language-update').val(data.data.language);
+					$('#title-update, #text-update, #language-update').prop('disabled', false);
+
+					$('#update, #delete, #status').data('id', data.data.id).prop('disabled', false);
+
+					$('#reportes').val(null);
+				}).fail(function(jqXHR) {
+					console.log(jqXHR);
+				});
+			});
+
+			$('#update').on('click', function() {
+				var id = parseInt($(this).data('id'));
+
+				$.ajax({
+					url: 'update.php',
+					method: 'POST',
+					data: {
+						id: id,
+						title: $('#title-update').val(),
+						text: $('#text-update').val(),
+						language: $('#language-update').val().toLowerCase()
+					}
+				}).done(function(data) {
+					$('#result').text('').text(JSON.stringify(data, null, '\t'));
+
+					reset();
+
+				}).fail(function(jqXHR) {
+					console.log(jqXHR);
+				});
+			});
+
+			$('#delete').on('click', function() {
+				var id = parseInt($(this).data('id'));
+
+				var seguro = confirm('Seguro que quieres borrar este reporte?');
+				if(seguro == true) {
+					$.ajax({
+						url: 'delete.php',
+						method: 'POST',
+						data: {
+							id: id
+						}
+					}).done(function(data) {
+						$('#result').text('').text(JSON.stringify(data, null, '\t'));
+
+						reset();
+
+					}).fail(function(jqXHR) {
+						console.log(jqXHR);
+					});
+				}
+			});
+
+			$('#status').on('click', function() {
+				var id = parseInt($(this).data('id'));
+
+				$.ajax({
+					url: 'status.php',
+					method: 'POST',
+					data: {
+						id: id
+					}
+				}).done(function(data) {
+					$('#result').text('').text(JSON.stringify(data, null, '\t'));
+
+					reset();
+
+				}).fail(function(jqXHR) {
+					console.log(jqXHR);
+				});
+			});
+		});
+	</script>
+</body>
+
+</html>
