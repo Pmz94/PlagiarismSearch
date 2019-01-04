@@ -11,7 +11,7 @@
 
 <style>
 	body {
-		padding: 90px;
+		padding: 50px 90px 50px 90px;
 	}
 
 	.form-control {
@@ -65,6 +65,7 @@
 				<li class="list-group-item">
 					<button id="list" class="btn btn-sm btn-primary">Ver todos mis reportes</button>
 				</li>
+
 				<li class="list-group-item">
 					<h6 id="warning-create" style="display: none;"><span class="badge badge-secondary">Llena estos campos</span></h6>
 					<input type="text" id="title" class="form-group form-control form-control-sm" placeholder="Titulo">
@@ -72,6 +73,7 @@
 					<input type="text" id="language" class="form-group form-control form-control-sm" placeholder="Idioma">
 					<button id="create" class="btn btn-sm btn-success">Crear reporte</button>
 				</li>
+
 				<li class="list-group-item">
 					<h6 id="warning-file" style="display: none;"><span class="badge badge-secondary">Llena estos campos</span></h6>
 					<input type="text" id="title-file" class="form-group form-control form-control-sm" placeholder="Titulo">
@@ -83,6 +85,7 @@
 					</div>
 					<button id="create-file" class="btn btn-sm btn-success">Crear reporte de un archivo local</button>
 				</li>
+
 				<li class="list-group-item">
 					<h6 id="warning-url" style="display: none;"><span class="badge badge-secondary">Llena estos campos</span></h6>
 					<h6 id="warning-url-real" style="display: none;"><span class="badge badge-secondary">Escribe un link de verdad</span></h6>
@@ -90,11 +93,13 @@
 					<input type="text" id="url" class="form-group form-control form-control-sm" placeholder="URL">
 					<button id="create-url" class="btn btn-sm btn-success">Crear reporte de un URL publico</button>
 				</li>
+
 				<li class="list-group-item">
 					<h6 id="warning-view" style="display: none;"><span class="badge badge-secondary">Selecciona un reporte</span></h6>
 					<select id="reportes" class="form-group form-control form-control-sm"></select>
 					<button id="view" class="btn btn-sm btn-info">Ver reporte seleccionado</button>
 				</li>
+
 				<li class="list-group-item">
 					<h6 id="warning-update"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
 					<input type="text" id="title-update" class="form-group form-control form-control-sm" placeholder="Titulo" disabled>
@@ -102,10 +107,12 @@
 					<input type="text" id="language-update" class="form-group form-control form-control-sm" placeholder="Idioma" disabled>
 					<button id="update" class="btn btn-sm btn-warning" disabled>Actualizar reporte</button>
 				</li>
+
 				<li class="list-group-item">
 					<h6 id="warning-delete"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
 					<button id="delete" class="btn btn-sm btn-danger" disabled>Borrar reporte</button>
 				</li>
+
 				<li class="list-group-item">
 					<h6 id="warning-status"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
 					<button id="status" class="btn btn-sm btn-info" disabled>Estado de reporte</button>
