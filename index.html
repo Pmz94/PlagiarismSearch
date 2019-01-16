@@ -63,6 +63,19 @@
 		<div class="col-3">
 			<ol class="list-group">
 				<li class="list-group-item">
+					<h6 id="custom-warning" style="display: none;"><span class="badge badge-secondary">Llena estos campos</span></h6>
+					<input type="text" id="custom-title" class="form-group form-control form-control-sm" placeholder="Titulo">
+					<div class="input-group">
+						<label class="input-group-prepend">
+							<span class="btn btn-sm btn-success">SUBIR ARCHIVO(S)<input type="file" id="custom-file" style="display: none;"></span>
+						</label>
+						<input type="text" id="custom-text-file" class="form-group form-control form-control-sm" value="Sin archivo adjunto..." readonly>
+					</div>
+					<textarea id="custom-text" class="form-group form-control form-control-sm" placeholder="OBSERVACIONES/TEXTO ADJUNTO"></textarea>
+					<button id="custom-create" class="btn btn-sm btn-outline-success">ENVIAR</button>
+				</li>
+
+				<li class="list-group-item">
 					<button id="list" class="btn btn-sm btn-primary">Ver todos mis reportes</button>
 				</li>
 
@@ -166,6 +179,51 @@
 
 			$('#list').on('click', function() {
 				getReportes(2);
+			});
+
+			$('#custom-create').on('click', function() {
+
+				let $custom_title = $('#custom-title');
+				let $custom_file = $('#custom-file');
+				let $custom_text = $('#custom-text');
+
+				if($custom_title.val() == '' || $custom_file.val() == '' || $custom_text.val() == '') {
+					$('#custom-warning').show().delay(4000).fadeOut();
+					return null;
+				}
+
+				var data = new FormData();
+
+				data.append('title', $custom_title.val());
+
+				$.each($custom_file[0].files, function(i, file) {
+					data.append('file-' + i, file);
+				});
+
+				data.append('text', $custom_text.val());
+
+				let object = {};
+				data.forEach(function(value, i) {
+					object[i] = value;
+				});
+				console.log(object);
+
+				$.ajax({
+					url: 'custom-create.php',
+					method: 'POST',
+					data: data,
+					cache: false,
+					contentType: false,
+					processData: false
+				}).done(function(data) {
+					$('#result').text('').text(JSON.stringify(data, null, '\t'));
+					$custom_title.val('');
+					$custom_file.val('');
+					$custom_text.val('');
+					getReportes(1);
+				}).fail(function(jqXHR) {
+					console.log(jqXHR);
+				});
 			});
 
 			$('#create').on('click', function() {
