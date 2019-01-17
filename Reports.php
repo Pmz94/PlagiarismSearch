@@ -11,32 +11,50 @@ class Reports {
 	//Update
 	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports/update/1218348 -u programacion@csweb.com.mx:nez4ot0vgkl0bhstb02f90n-32978001 -d "report[title]=Bootstrap&report[notified]=1545249429&report[modified]=1545249429"
 
-
 	public $apiUrl = 'https://plagiarismsearch.com/api/v3';
 	public $apiUser;
 	public $apiKey;
 
-	public function __construct($config = array()) {
-		if(!empty($config)) {
-			$this->configure($config);
-		}
+	public function __construct($apiUser, $apiKey) {
+		$this->apiUser = $apiUser;
+		$this->apiKey = $apiKey;
 	}
 
-	protected function configure($config = array()) {
-		if(!empty($config)) {
-			if(is_array($config)) {
-				foreach($config as $key => $value) {
-					$this->{$key} = $value;
-				}
-			}
-		}
+	public function indexAction($params) {
+		$url = $this->apiUrl . '/reports';
+		return $this->post($url, $params);
+	}
+
+	public function createAction($params, $files = array()) {
+		$url = $this->apiUrl . '/reports/create';
+		return $this->post($url, $params, $files);
+	}
+
+	public function viewAction($id, $params = array()) {
+		$url = $this->apiUrl . '/reports/view/' . $id;
+		return $this->post($url, $params);
+	}
+
+	public function updateAction($id, $params = array()) {
+		$url = $this->apiUrl . '/reports/update/' . $id;
+		return $this->post($url, $params);
+	}
+
+	public function deleteAction($id, $params = array()) {
+		$url = $this->apiUrl . '/reports/delete/' . $id;
+		return $this->post($url, $params);
+	}
+
+	public function statusAction($id, $params = array()) {
+		$url = $this->apiUrl . '/reports/status/' . $id;
+		return $this->post($url, $params);
 	}
 
 	// post('https://plagiarismsearch.com/api/v3/reports/create', ['text' => 'texto a verificar'], [])
-	public function post($url, $post = array(), $files = array()) {
+	public function post($url, $params = array(), $files = array()) {
 		$curl = curl_init($url);
 
-		if($postFields = $this->buildPostFiles($post, $files) or $postFields = $this->buildPostToString($post)) {
+		if($postFields = $this->buildPostFiles($params, $files) or $postFields = $this->buildPostToString($params)) {
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $postFields);
 		}
@@ -63,23 +81,23 @@ class Reports {
 	}
 
 	// this->buildPostToString(['text' => 'texto a verificar'])
-	private function buildPostToString($post) {
-		if(!empty($post)) {
-			if(is_array($post)) {
-				return http_build_query($post, '', '&');
+	private function buildPostToString($params) {
+		if(!empty($params)) {
+			if(is_array($params)) {
+				return http_build_query($params, '', '&');
 				// 'text=texto a verificar'
 			} else {
-				return $post;
+				return $params;
 			}
 		}
 		return false;
 	}
 
 	// this->buildPostFiles(['text' => 'texto a verificar'], [])
-	private function buildPostFiles($post, $files) {
+	private function buildPostFiles($params, $files) {
 		$result = array();
-		if(!empty($post) and is_array($post)) {
-			foreach($post as $key => $value) {
+		if(!empty($params) and is_array($params)) {
+			foreach($params as $key => $value) {
 				if(is_array($value)) {
 					$result[$key] = http_build_query($value, '', '&');
 				} else {
@@ -112,36 +130,6 @@ class Reports {
 			}
 		}
 		return $result;
-	}
-
-	public function indexAction($data) {
-		$url = $this->apiUrl . '/reports';
-		return $this->post($url, $data);
-	}
-
-	public function createAction($data, $files = array()) {
-		$url = $this->apiUrl . '/reports/create';
-		return $this->post($url, $data, $files);
-	}
-
-	public function viewAction($id, $data = array()) {
-		$url = $this->apiUrl . '/reports/view/' . $id;
-		return $this->post($url, $data);
-	}
-
-	public function updateAction($id, $data = array()) {
-		$url = $this->apiUrl . '/reports/update/' . $id;
-		return $this->post($url, $data);
-	}
-
-	public function deleteAction($id, $data = array()) {
-		$url = $this->apiUrl . '/reports/delete/' . $id;
-		return $this->post($url, $data);
-	}
-
-	public function statusAction($id, $data = array()) {
-		$url = $this->apiUrl . '/reports/status/' . $id;
-		return $this->post($url, $data);
 	}
 
 }
