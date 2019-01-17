@@ -4,8 +4,8 @@ require_once 'Reports.php';
 
 $config = [
 	'apiUrl' => 'https://plagiarismsearch.com/api/v3',
-	'apiUser' => 'pedrito_lindo_alokado@hotmail.com',
-	'apiKey' => '1dry51f48ve5gejlausd7ew-29365771',
+	'apiUser' => 'programacion@csweb.com.mx',
+	'apiKey' => 'nez4ot0vgkl0bhstb02f90n-32978001',
 ];
 
 $api = new Reports($config);

@@ -1,16 +1,14 @@
 <?php
 
 /* @var $api Reports */
-require_once 'init-api.php';
+require_once '../init-api.php';
 
 $data = [
-	'title' => $_POST['title'],
-	'text' => $_POST['text'],
-	'language' => 'es'
+	'title' => $_POST['title']
 ];
 
 $files = [
-	'file' => $_FILES['file-0'],
+    'file' => $_FILES['file-0'],
 ];
 //$files = [
 //	'file' => realpath('pdf-sample.pdf'),

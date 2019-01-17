@@ -5,8 +5,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
 	<title>PlagiarismSearch Sample reports API</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
 </head>
 
 <style>
@@ -17,10 +17,6 @@
 	.form-control {
 		/*font-size: 14px;*/
 		resize: none;
-	}
-
-	#language {
-		text-transform: lowercase;
 	}
 
 	#result {
@@ -83,7 +79,6 @@
 					<h6 id="warning-create" style="display: none;"><span class="badge badge-secondary">Llena estos campos</span></h6>
 					<input type="text" id="title" class="form-group form-control form-control-sm" placeholder="Titulo">
 					<textarea id="text" class="form-group form-control form-control-sm" placeholder="Contenido"></textarea>
-					<input type="text" id="language" class="form-group form-control form-control-sm" placeholder="Idioma">
 					<button id="create" class="btn btn-sm btn-success">Crear reporte</button>
 				</li>
 
@@ -117,7 +112,6 @@
 					<h6 id="warning-update"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
 					<input type="text" id="title-update" class="form-group form-control form-control-sm" placeholder="Titulo" disabled>
 					<textarea id="text-update" class="form-group form-control form-control-sm" placeholder="Contenido" disabled></textarea>
-					<input type="text" id="language-update" class="form-group form-control form-control-sm" placeholder="Idioma" disabled>
 					<button id="update" class="btn btn-sm btn-warning" disabled>Actualizar reporte</button>
 				</li>
 
@@ -133,6 +127,14 @@
 			</ol>
 		</div>
 		<div class="col-9">
+			<div id="res_div" class="row" style="display: none;">
+				<div class="col-auto">
+					<h2 id="plagiat"></h2>
+				</div>
+				<div class="col-auto">
+					<a id="boton_link" class="btn btn-sm btn-primary" href="">Ver reporte</a>
+				</div>
+			</div>
 			<pre id="result"></pre>
 		</div>
 	</div>
@@ -143,7 +145,7 @@
 
 			function getReportes(cmd) {
 				$.ajax({
-					url: 'list.php',
+					url: 'actions/list.php',
 					method: 'POST'
 				}).done(function(data) {
 					switch(cmd) {
@@ -169,7 +171,7 @@
 
 			function reset() {
 				$('#warning-update, #warning-delete, #warning-status').show();
-				$('#title-update, #text-update, #language-update').val('').prop('disabled', true);
+				$('#title-update, #text-update').val('').prop('disabled', true);
 				$('#update, #delete, #status').data('id', null).prop('disabled', true);
 				getReportes(1);
 				$('#reportes').val(null);
@@ -209,7 +211,7 @@
 				console.log(object);
 
 				$.ajax({
-					url: 'custom-create.php',
+					url: 'actions/custom-create.php',
 					method: 'POST',
 					data: data,
 					cache: false,
@@ -227,22 +229,25 @@
 			});
 
 			$('#create').on('click', function() {
-				if($('#title').val() == '' || $('#text').val() == '' || $('#language').val() == '') {
+
+				let $title = $('#title');
+				let $text = $('#text');
+
+				if($title.val() == '' || $text.val() == '') {
 					$('#warning-create').show().delay(4000).fadeOut();
 					return null;
 				}
 
 				$.ajax({
-					url: 'create.php',
+					url: 'actions/create.php',
 					method: 'POST',
 					data: {
-						title: $('#title').val(),
-						text: $('#text').val(),
-						language: $('#language').val().toLowerCase()
+						title: $title.val(),
+						text: $text.val()
 					}
 				}).done(function(data) {
 					$('#result').text('').text(JSON.stringify(data, null, '\t'));
-					$('#title, #text, #language').val('');
+					$('#title, #text').val('');
 					getReportes(1);
 				}).fail(function(jqXHR) {
 					console.log(jqXHR);
@@ -278,7 +283,7 @@
 				data.append('title', $('#title-file').val());
 
 				$.ajax({
-					url: 'create-file.php',
+					url: 'actions/create-file.php',
 					method: 'POST',
 					data: data,
 					cache: false,
@@ -309,7 +314,7 @@
 					url: $url
 				}).done(function() {
 					$.ajax({
-						url: 'create-url.php',
+						url: 'actions/create-url.php',
 						method: 'POST',
 						data: {
 							title: $title,
@@ -334,7 +339,7 @@
 					return null;
 				}
 				$.ajax({
-					url: 'view.php',
+					url: 'actions/view.php',
 					method: 'POST',
 					data: {
 						id: parseInt($('#reportes').val())
@@ -342,12 +347,16 @@
 				}).done(function(data) {
 					$('#result').text('').text(JSON.stringify(data, null, '\t'));
 
+					$('#plagiat').text('').text(data.data.plagiat);
+					let link = (data.data.file) ? data.data.file : '#'
+					$('#boton_link').attr('href', link);
+					$('#res_div').show();
+
 					$('#warning-update, #warning-delete, #warning-status').hide();
 
 					$('#title-update').val(data.data.title);
 					$('#text-update').val(data.data.text);
-					$('#language-update').val(data.data.language);
-					$('#title-update, #text-update, #language-update').prop('disabled', false);
+					$('#title-update, #text-update').prop('disabled', false);
 
 					$('#update, #delete, #status').data('id', data.data.id).prop('disabled', false);
 
@@ -361,13 +370,12 @@
 				var id = parseInt($(this).data('id'));
 
 				$.ajax({
-					url: 'update.php',
+					url: 'actions/update.php',
 					method: 'POST',
 					data: {
 						id: id,
 						title: $('#title-update').val(),
-						text: $('#text-update').val(),
-						language: $('#language-update').val().toLowerCase()
+						text: $('#text-update').val()
 					}
 				}).done(function(data) {
 					$('#result').text('').text(JSON.stringify(data, null, '\t'));
@@ -385,7 +393,7 @@
 				var seguro = confirm('Seguro que quieres borrar este reporte?');
 				if(seguro == true) {
 					$.ajax({
-						url: 'delete.php',
+						url: 'actions/delete.php',
 						method: 'POST',
 						data: {
 							id: id
@@ -405,7 +413,7 @@
 				var id = parseInt($(this).data('id'));
 
 				$.ajax({
-					url: 'status.php',
+					url: 'actions/status.php',
 					method: 'POST',
 					data: {
 						id: id

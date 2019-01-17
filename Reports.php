@@ -5,8 +5,11 @@ class Reports {
 	//List
 	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports -u pedrito_lindo_alokado@hotmail.com:1dry51f48ve5gejlausd7ew-29365771 -d "page=1&limit=20&show_relations=0"
 
+	//Create
+	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports/create -u programacion@csweb.com.mx:nez4ot0vgkl0bhstb02f90n-32978001 -d "title=Tarea9&text=calando&language=es"
+
 	//Update
-	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports/update/1196465 -u pedrito_lindo_alokado@hotmail.com:1dry51f48ve5gejlausd7ew-29365771 -d "report[title]=Bootstrap&report[notified]=1545249429&report[modified]=1545249429"
+	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports/update/1218348 -u programacion@csweb.com.mx:nez4ot0vgkl0bhstb02f90n-32978001 -d "report[title]=Bootstrap&report[notified]=1545249429&report[modified]=1545249429"
 
 
 	public $apiUrl = 'https://plagiarismsearch.com/api/v3';
@@ -57,7 +60,6 @@ class Reports {
 		}
 
 		return $data;
-		//return json_decode($data, true);
 	}
 
 	// this->buildPostToString(['text' => 'texto a verificar'])

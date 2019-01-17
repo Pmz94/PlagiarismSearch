@@ -1,7 +1,7 @@
 <?php
 
 /* @var $api Reports */
-require_once 'init-api.php';
+require_once '../init-api.php';
 
 $id = $_POST['id'];
 $data = [];

@@ -1,12 +1,11 @@
 <?php
 
 /* @var $api Reports */
-require_once 'init-api.php';
+require_once '../init-api.php';
 
 $data = [
 	'title' => $_POST['title'],
-	'text' => $_POST['text'],
-	'language' => strtolower($_POST['language'])
+	'text' => $_POST['text']
 ];
 
 echo $api->createAction($data);
