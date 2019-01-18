@@ -4,9 +4,9 @@
 require_once '../init-api.php';
 
 $data = [
-	'page' => 1,
-	'limit' => 20,
-	'show_relations' => 0,
+	//'page' => 1,
+	'limit' => 50,
+	//'show_relations' => 1,
 ];
 
 echo $api->indexAction($data);

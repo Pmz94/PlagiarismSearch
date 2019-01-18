@@ -3,10 +3,13 @@
 class Reports {
 
 	//List
-	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports -u pedrito_lindo_alokado@hotmail.com:1dry51f48ve5gejlausd7ew-29365771 -d "page=1&limit=20&show_relations=0"
+	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports -u pedrito_lindo_alokado@hotmail.com:1dry51f48ve5gejlausd7ew-29365771 -d "limit=20"
 
 	//Create
 	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports/create -u programacion@csweb.com.mx:nez4ot0vgkl0bhstb02f90n-32978001 -d "title=Tarea9&text=calando&language=es"
+
+	//View
+	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports/{id} -u programacion@csweb.com.mx:nez4ot0vgkl0bhstb02f90n-32978001
 
 	//Update
 	//curl -l -X POST https://plagiarismsearch.com/api/v3/reports/update/1218348 -u programacion@csweb.com.mx:nez4ot0vgkl0bhstb02f90n-32978001 -d "report[title]=Bootstrap&report[notified]=1545249429&report[modified]=1545249429"
@@ -50,7 +53,6 @@ class Reports {
 		return $this->post($url, $params);
 	}
 
-	// post('https://plagiarismsearch.com/api/v3/reports/create', ['text' => 'texto a verificar'], [])
 	public function post($url, $params = array(), $files = array()) {
 		$curl = curl_init($url);
 
@@ -70,6 +72,7 @@ class Reports {
 
 		$data = curl_exec($curl);
 		$info = curl_getinfo($curl);
+		$content = substr($data, curl_getinfo($curl, CURLINFO_HEADER_SIZE));
 		$error = curl_error($curl);
 		curl_close($curl);
 

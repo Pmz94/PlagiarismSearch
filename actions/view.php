@@ -4,6 +4,9 @@
 require_once '../init-api.php';
 
 $id = $_POST['id'];
-$data = [];
 
-echo $api->viewAction($id, $data);
+$params = [
+	//'show_relations' => 1
+];
+
+echo $api->viewAction($id, $params);
