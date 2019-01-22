@@ -64,6 +64,8 @@ class Reports {
 		// HTTP basic authentication
 		curl_setopt($curl, CURLOPT_USERPWD, $this->apiUser . ':' . $this->apiKey);
 
+		curl_setopt($curl, CURLOPT_HEADER, true);
+		curl_setopt($curl, CURLOPT_VERBOSE, true);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -80,15 +82,13 @@ class Reports {
 			var_dump($error);
 		}
 
-		return $data;
+		return $content;
 	}
 
-	// this->buildPostToString(['text' => 'texto a verificar'])
 	private function buildPostToString($params) {
 		if(!empty($params)) {
 			if(is_array($params)) {
 				return http_build_query($params, '', '&');
-				// 'text=texto a verificar'
 			} else {
 				return $params;
 			}
@@ -96,7 +96,6 @@ class Reports {
 		return false;
 	}
 
-	// this->buildPostFiles(['text' => 'texto a verificar'], [])
 	private function buildPostFiles($params, $files) {
 		$result = array();
 		if(!empty($params) and is_array($params)) {
@@ -108,12 +107,9 @@ class Reports {
 				}
 			}
 		}
-
 		if(!empty($files) and is_array($files)) {
 			$result = array_merge($result, $this->buildFiles($files));
 		}
-
-		// ['text' => '']
 		return $result;
 	}
 
