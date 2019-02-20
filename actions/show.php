@@ -9,4 +9,4 @@ $params = [
 	//'show_relations' => 1
 ];
 
-echo $api->viewAction($id, $params);
+echo $api->show($id, $params);

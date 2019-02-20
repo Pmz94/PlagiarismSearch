@@ -6,7 +6,7 @@ require_once '../init-api.php';
 $id = $_POST['id'];
 $data = [];
 
-echo $api->statusAction($id, $data);
+echo $api->status($id, $data);
 
 //Estados de reporte en variable "status" del JSON
 //{

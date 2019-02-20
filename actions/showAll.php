@@ -9,4 +9,4 @@ $data = [
 	//'show_relations' => 1,
 ];
 
-echo $api->indexAction($data);
+echo $api->show(null, $data);

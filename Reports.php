@@ -23,32 +23,43 @@ class Reports {
 		$this->apiKey = $apiKey;
 	}
 
-	public function indexAction($params) {
+	public function users_info($params = array()) {
+		$url = $this->apiUrl . '/users/info';
+		return $this->post($url, $params);
+	}
+
+	public function showAll($params = array()) {
 		$url = $this->apiUrl . '/reports';
 		return $this->post($url, $params);
 	}
 
-	public function createAction($params, $files = array()) {
+	public function create($params, $files = array()) {
 		$url = $this->apiUrl . '/reports/create';
 		return $this->post($url, $params, $files);
 	}
 
-	public function viewAction($id, $params = array()) {
-		$url = $this->apiUrl . '/reports/view/' . $id;
+	public function show($id = null, $params = array()) {
+		$url = $this->apiUrl;
+		$url .= ($id) ? '/reports/view/' . $id : '/reports';
 		return $this->post($url, $params);
 	}
 
-	public function updateAction($id, $params = array()) {
+	public function progress($id, $params = array()) {
+		$url = $this->apiUrl . '/reports/progress/' . $id;
+		return $this->post($url, $params);
+	}
+
+	public function update($id, $params = array()) {
 		$url = $this->apiUrl . '/reports/update/' . $id;
 		return $this->post($url, $params);
 	}
 
-	public function deleteAction($id, $params = array()) {
+	public function delete($id, $params = array()) {
 		$url = $this->apiUrl . '/reports/delete/' . $id;
 		return $this->post($url, $params);
 	}
 
-	public function statusAction($id, $params = array()) {
+	public function status($id, $params = array()) {
 		$url = $this->apiUrl . '/reports/status/' . $id;
 		return $this->post($url, $params);
 	}

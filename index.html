@@ -121,7 +121,7 @@
 
 			function getReportes(cmd) {
 				$.ajax({
-					url: 'actions/list.php',
+					url: 'actions/showAll.php',
 					method: 'POST'
 				}).done(function(data) {
 					switch(cmd) {
@@ -238,7 +238,7 @@
 					return null;
 				}
 				$.ajax({
-					url: 'actions/view.php',
+					url: 'actions/show.php',
 					method: 'POST',
 					data: {
 						id: parseInt($('#reportes').val())

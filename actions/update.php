@@ -14,4 +14,4 @@ $updateReportFields = [
 
 $data = ['report' => $updateReportFields];
 
-echo $api->updateAction($id, $data);
+echo $api->update($id, $data);

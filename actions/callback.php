@@ -6,9 +6,6 @@
  * Time: 02:40 PM
  */
 
-$callback = $_POST;
-$json = file_get_contents('php://input');
+$callback = json_decode($_POST['report']);
 
-file_put_contents('C:/xampp/htdocs/Proyectos/Webhooks/respuestas/plagiarism.txt', $callback);
-echo '<hr>';
-file_put_contents('C:/xampp/htdocs/Proyectos/Webhooks/respuestas/plagiarismjson.txt', $json);
+file_put_contents('C:\xampp\htdocs\proyectos\webhooks\respuestas\callback.json', json_encode($callback, JSON_PRETTY_PRINT));
