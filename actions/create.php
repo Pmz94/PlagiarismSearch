@@ -7,10 +7,10 @@ $params = [];
 $files = [];
 
 if($_POST['title']) $params['title'] = $_POST['title'];
-if(isset($_POST['text'])) $params['text'] = $_POST['text'];
-if(isset($_POST['url'])) $params['url'] = $_POST['url'];
 
+if(isset($_POST['text'])) $params['text'] = $_POST['text'];
 if(isset($_FILES['file-0'])) $files['file'] = $_FILES['file-0'];
+if(isset($_POST['url'])) $params['url'] = $_POST['url'];
 
 $params['callback_url'] = 'https://6b1d2868.ngrok.io/PlagiarismSearch/actions/callback.php';
 
@@ -22,7 +22,7 @@ $params['callback_url'] = 'https://6b1d2868.ngrok.io/PlagiarismSearch/actions/ca
 
 //$files = [
 //	'file' => $_FILES['file-0'] //Segundo toma en cuenta el archivo
-//	//'file' => realpath('pdf-sample.pdf')
+//	//'file' => realpath('../sample_files/pdf-sample.pdf')
 //];
 
 echo $api->create($params, $files);

@@ -19,6 +19,14 @@
 		resize: none;
 	}
 
+	.titulo {
+		color: inherit;
+	}
+
+	.titulo:hover {
+		text-decoration: none;
+	}
+
 	#result {
 		background-color: whitesmoke;
 		font-size: 13px;
@@ -52,12 +60,20 @@
 
 <body>
 	<div class="row">
-		<h1>Plagiarism Search</h1>
+		<h1><a href="https://plagiarismsearch.com" target="_blank" class="titulo">Plagiarism Search</a></h1>
 	</div>
 	<hr>
 	<div class="row">
 		<div class="col-3">
 			<ol class="list-group">
+				<li class="list-group-item">
+					<button id="account" class="btn btn-sm btn-info">Detalles de cuenta</button>
+				</li>
+
+				<li class="list-group-item">
+					<button id="list" class="btn btn-sm btn-primary">Ver todos mis reportes</button>
+				</li>
+
 				<li class="list-group-item">
 					<h6 id="warning-create" style="display: none;"><span class="badge badge-secondary">Ponle titulo</span></h6>
 					<h6 id="warning-create2" style="display: none;"><span class="badge badge-secondary">Llena uno de los 3 campos por lo menos</span></h6>
@@ -71,10 +87,6 @@
 					</div>
 					<input type="text" id="url" class="form-group form-control form-control-sm" placeholder="URL">
 					<button id="create" class="btn btn-sm btn-outline-success">ENVIAR</button>
-				</li>
-
-				<li class="list-group-item">
-					<button id="list" class="btn btn-sm btn-primary">Ver todos mis reportes</button>
 				</li>
 
 				<li class="list-group-item">
@@ -104,7 +116,10 @@
 		<div class="col-9">
 			<div id="res_div" class="row" style="display: none;">
 				<div class="col-auto">
-					<h3>Porcentaje de plagio: <span id="plagiat"></span>%</h3>
+					<h4>Palabras: <span id="num_words"></span></h4>
+				</div>
+				<div class="col-auto">
+					<h4>Plagio: <span id="plagiat"></span>%</h4>
 				</div>
 				<div class="col-auto">
 					<a id="btn-link" class="btn btn-sm btn-primary">Ver reporte</a>
@@ -128,7 +143,7 @@
 						case 1:
 							$('#reportes').prop('disabled', true).empty().append('<option value="" selected disabled>Seleccionar reporte</option>');
 							$.each(data.data, function(i, reporte) {
-								var list = '';
+								let list = '';
 								list += `<option value="${reporte.id}">`;
 								list += reporte.title;
 								list += '</option>';
@@ -159,6 +174,18 @@
 
 			getReportes(1);
 			$('input').attr('autocomplete', 'off');
+
+			$('#account').on('click', function() {
+				$.ajax({
+					url: 'actions/account.php',
+					method: 'POST',
+				}).done(function(data) {
+					$('#result').text('').text(JSON.stringify(data, null, '\t'));
+					reset();
+				}).fail(function(jqXHR) {
+					console.log(jqXHR);
+				});
+			});
 
 			$('#list').on('click', function() {
 				getReportes(2);
@@ -218,13 +245,13 @@
 			});
 
 			$(':file').on('change', function() {
-				var $input = $(this);
-				var numFiles = $input.get(0).files ? $input.get(0).files.length : 1;
-				var label = $input.val().replace(/\\/g, '/').replace(/.*\//, '');
+				let $input = $(this);
+				let numFiles = $input.get(0).files ? $input.get(0).files.length : 1;
+				let label = $input.val().replace(/\\/g, '/').replace(/.*\//, '');
 				$input.trigger('fileselect', [numFiles, label]);
 			}).on('fileselect', function(event, numFiles, label) {
-				var $text = $(this).parents('.input-group').find(':text');
-				var log = numFiles > 1 ? numFiles + ' files selected' : label;
+				let $text = $(this).parents('.input-group').find(':text');
+				let log = numFiles > 1 ? numFiles + ' files selected' : label;
 				if($text.length) {
 					$text.val(log);
 				} else {
@@ -246,6 +273,7 @@
 				}).done(function(data) {
 					$('#result').text('').text(JSON.stringify(data, null, '\t'));
 
+					$('#num_words').text('').text(data.data.length);
 					$('#plagiat').text('').text(data.data.plagiat);
 
 					if(data.data.file != null) {
@@ -274,7 +302,7 @@
 			});
 
 			$('#update').on('click', function() {
-				var id = parseInt($(this).data('id'));
+				let id = parseInt($(this).data('id'));
 
 				$.ajax({
 					url: 'actions/update.php',
@@ -295,9 +323,9 @@
 			});
 
 			$('#delete').on('click', function() {
-				var id = parseInt($(this).data('id'));
+				let id = parseInt($(this).data('id'));
 
-				var seguro = confirm('Seguro que quieres borrar este reporte?');
+				let seguro = confirm('Seguro que quieres borrar este reporte?');
 				if(seguro == true) {
 					$.ajax({
 						url: 'actions/delete.php',
@@ -317,7 +345,7 @@
 			});
 
 			$('#status').on('click', function() {
-				var id = parseInt($(this).data('id'));
+				let id = parseInt($(this).data('id'));
 
 				$.ajax({
 					url: 'actions/status.php',
