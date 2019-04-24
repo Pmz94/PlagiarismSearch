@@ -10,8 +10,26 @@
 </head>
 
 <style>
-	body {
+	.benny-logo {
+		height: 30px;
+	}
+
+	img.logo {
+		height: 40px;
+	}
+
+	.navbar {
+		box-shadow: 0 3px 15px -5px #555555;
+	}
+
+	section {
 		padding: 50px 90px 50px 90px;
+	}
+
+	@media (min-width: 1472px) {
+		.container {
+			max-width: 1344px;
+		}
 	}
 
 	.form-control {
@@ -59,76 +77,98 @@
 </style>
 
 <body>
-	<div class="row">
-		<h1><a href="https://plagiarismsearch.com" target="_blank" class="titulo">Plagiarism Search</a></h1>
-	</div>
-	<hr>
-	<div class="row">
-		<div class="col-3">
-			<ol class="list-group">
-				<li class="list-group-item">
-					<button id="account" class="btn btn-sm btn-info">Detalles de cuenta</button>
-				</li>
-
-				<li class="list-group-item">
-					<button id="list" class="btn btn-sm btn-primary">Ver todos mis reportes</button>
-				</li>
-
-				<li class="list-group-item">
-					<h6 id="warning-create" style="display: none;"><span class="badge badge-secondary">Ponle titulo</span></h6>
-					<h6 id="warning-create2" style="display: none;"><span class="badge badge-secondary">Llena uno de los 3 campos por lo menos</span></h6>
-					<input type="text" id="title" class="form-group form-control form-control-sm" placeholder="Titulo">
-					<textarea id="text" class="form-group form-control form-control-sm" placeholder="OBSERVACIONES/TEXTO ADJUNTO"></textarea>
-					<div class="input-group">
-						<label class="input-group-prepend">
-							<span class="btn btn-sm btn-success">SUBIR ARCHIVO(S)<input type="file" id="file" style="display: none;"></span>
-						</label>
-						<input type="text" id="file-text" class="form-group form-control form-control-sm" value="Sin archivo adjunto..." readonly>
-					</div>
-					<input type="text" id="url" class="form-group form-control form-control-sm" placeholder="URL">
-					<button id="create" class="btn btn-sm btn-outline-success">ENVIAR</button>
-				</li>
-
-				<li class="list-group-item">
-					<h6 id="warning-view" style="display: none;"><span class="badge badge-secondary">Selecciona un reporte</span></h6>
-					<select id="reportes" class="form-group form-control form-control-sm"></select>
-					<button id="view" class="btn btn-sm btn-info">Ver reporte seleccionado</button>
-				</li>
-
-				<li class="list-group-item">
-					<h6 id="warning-update"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
-					<input type="text" id="title-update" class="form-group form-control form-control-sm" placeholder="Titulo" disabled>
-					<textarea id="text-update" class="form-group form-control form-control-sm" placeholder="Contenido" disabled></textarea>
-					<button id="update" class="btn btn-sm btn-warning" disabled>Actualizar reporte</button>
-				</li>
-
-				<li class="list-group-item">
-					<h6 id="warning-delete"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
-					<button id="delete" class="btn btn-sm btn-danger" disabled>Borrar reporte</button>
-				</li>
-
-				<li class="list-group-item">
-					<h6 id="warning-status"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
-					<button id="status" class="btn btn-sm btn-info" disabled>Estado de reporte</button>
-				</li>
-			</ol>
-		</div>
-		<div class="col-9">
-			<div id="res_div" class="row" style="display: none;">
-				<div class="col-auto">
-					<h4>Palabras: <span id="num_words"></span></h4>
-				</div>
-				<div class="col-auto">
-					<h4>Plagio: <span id="plagiat"></span>%</h4>
-				</div>
-				<div class="col-auto">
-					<a id="btn-link" class="btn btn-sm btn-primary">Ver reporte</a>
-					<button id="btn-link-null" class="btn btn-sm btn-primary" style="display: none;" disabled>Checando...</button>
-				</div>
+	<nav class="navbar navbar-light bg-light navbar-expand-lg">
+		<div class="container">
+			<a href="https://pmz94.github.io" class="navbar-brand">
+				<img src="https://pmz94.github.io/pagpersonal/assets/img/navbar/benny.png" alt="Benny" title="Volver a la pagina principal" class="benny-logo">
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item active">
+						<img src="plagios-logo.png" alt="PlagiarismSearch" class="nav-link logo">
+					</li>
+				</ul>
 			</div>
-			<pre id="result"></pre>
 		</div>
-	</div>
+	</nav>
+
+	<section class="container">
+		<div class="row">
+			<div class="col-auto">
+				<h1><a href="https://plagiarismsearch.com" target="_blank" class="titulo">Plagiarism Search</a></h1>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-lg-4 col-sm-12">
+				<ol class="list-group">
+					<li class="list-group-item">
+						<button id="account" class="btn btn-sm btn-info">Detalles de cuenta</button>
+					</li>
+
+					<li class="list-group-item">
+						<button id="list" class="btn btn-sm btn-primary">Ver todos mis reportes</button>
+					</li>
+
+					<li class="list-group-item">
+						<h6 id="warning-create" style="display: none;"><span class="badge badge-secondary">Ponle titulo</span></h6>
+						<h6 id="warning-create2" style="display: none;"><span class="badge badge-secondary">Llena uno de los 3 campos por lo menos</span></h6>
+						<input type="text" id="title" class="form-group form-control form-control-sm" placeholder="Titulo">
+						<textarea id="text" class="form-group form-control form-control-sm" placeholder="OBSERVACIONES/TEXTO ADJUNTO"></textarea>
+						<div class="input-group">
+							<label class="input-group-prepend">
+								<span class="btn btn-sm btn-success">SUBIR ARCHIVO(S)<input type="file" id="file" style="display: none;"></span>
+							</label>
+							<input type="text" id="file-text" class="form-group form-control form-control-sm" value="Sin archivo adjunto..." readonly>
+						</div>
+						<input type="text" id="url" class="form-group form-control form-control-sm" placeholder="URL">
+						<button id="create" class="btn btn-sm btn-outline-success">ENVIAR</button>
+					</li>
+
+					<li class="list-group-item">
+						<h6 id="warning-view" style="display: none;"><span class="badge badge-secondary">Selecciona un reporte</span></h6>
+						<select id="reportes" class="form-group form-control form-control-sm"></select>
+						<button id="view" class="btn btn-sm btn-info">Ver reporte seleccionado</button>
+					</li>
+
+					<li class="list-group-item">
+						<h6 id="warning-update"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
+						<input type="text" id="title-update" class="form-group form-control form-control-sm" placeholder="Titulo" disabled>
+						<textarea id="text-update" class="form-group form-control form-control-sm" placeholder="Contenido" disabled></textarea>
+						<button id="update" class="btn btn-sm btn-warning" disabled>Actualizar reporte</button>
+					</li>
+
+					<li class="list-group-item">
+						<h6 id="warning-delete"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
+						<button id="delete" class="btn btn-sm btn-danger" disabled>Borrar reporte</button>
+					</li>
+
+					<li class="list-group-item">
+						<h6 id="warning-status"><span class="badge badge-secondary">Selecciona un reporte arriba</span></h6>
+						<button id="status" class="btn btn-sm btn-info" disabled>Estado de reporte</button>
+					</li>
+				</ol>
+			</div>
+			<div class="col-lg-8 col-sm-12">
+				<div id="res_div" class="row" style="display: none;">
+					<div class="col-auto">
+						<h4>Palabras: <span id="num_words"></span></h4>
+					</div>
+					<div class="col-auto">
+						<h4>Plagio: <span id="plagiat"></span>%</h4>
+					</div>
+					<div class="col-auto">
+						<a id="btn-link" class="btn btn-sm btn-primary">Ver reporte</a>
+						<button id="btn-link-null" class="btn btn-sm btn-primary" style="display: none;" disabled>Checando...</button>
+					</div>
+				</div>
+				<pre id="result"></pre>
+			</div>
+		</div>
+	</section>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 	<script type="text/javascript">
