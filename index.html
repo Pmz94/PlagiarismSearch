@@ -196,7 +196,7 @@
 							$('#reportes').prop('disabled', false);
 							break;
 						case 2:
-							$('#result').text('').text(JSON.stringify(data, null, '\t'));
+							$('#result').text('').text(JSON.stringify(data, null, '    '));
 							reset();
 							break;
 					}
@@ -224,7 +224,7 @@
 					url: 'actions/account.php',
 					method: 'POST',
 				}).done(function(data) {
-					$('#result').text('').text(JSON.stringify(data, null, '\t'));
+					$('#result').text('').text(JSON.stringify(data, null, '    '));
 					reset();
 				}).fail(function(jqXHR) {
 					console.log(jqXHR);
